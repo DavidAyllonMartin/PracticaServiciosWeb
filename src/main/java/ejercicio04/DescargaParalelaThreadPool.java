@@ -1,6 +1,6 @@
-package org.infantaelena.ies.psp.UD3.ejercicios_voluntarios.ejercicio04;
+package ejercicio04;
 
-import org.infantaelena.ies.psp.UD3.ejercicios_voluntarios.ejercicio03.HiloDescarga;
+import ejercicio03.HiloDescarga;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,21 +10,39 @@ import java.nio.file.Paths;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * Clase para gestionar la descarga de archivos en paralelo usando un pool de hilos.
+ */
 public class DescargaParalelaThreadPool {
 
-    private Path archivo;
-    private Path carpeta;
-    private int hilosSimultaneos;
+    private Path archivo; // Archivo que contiene las URLs a descargar.
+    private Path carpeta; // Carpeta destino donde se guardarán los archivos descargados.
+    private int hilosSimultaneos; // Número de hilos simultáneos para las descargas.
 
+    /**
+     * Constructor que inicializa la clase con el archivo de URLs y la carpeta destino.
+     *
+     * @param archivo Archivo con URLs a descargar.
+     * @param carpeta Carpeta destino para guardar los archivos descargados.
+     */
     public DescargaParalelaThreadPool(Path archivo, Path carpeta) {
         setArchivo(archivo);
         setCarpeta(carpeta);
     }
 
+    /**
+     * Constructor que adicionalmente permite especificar el número de hilos simultáneos para las descargas.
+     *
+     * @param archivo Archivo con URLs a descargar.
+     * @param carpeta Carpeta destino para guardar los archivos descargados.
+     * @param hilosSimultaneos Número de hilos simultáneos para las descargas.
+     */
     public DescargaParalelaThreadPool(Path archivo, Path carpeta, int hilosSimultaneos) {
         this(archivo, carpeta);
         setHilosSimultaneos(hilosSimultaneos);
     }
+
+    // Getters y setters con validaciones para asegurar que los argumentos son válidos.
 
     public Path getArchivo() {
         return archivo;
@@ -65,9 +83,16 @@ public class DescargaParalelaThreadPool {
         this.hilosSimultaneos = hilosSimultaneos;
     }
 
+    /**
+     * Método principal que ejecuta el programa.
+     *
+     * @param args Argumentos de la línea de comando.
+     */
     public static void main(String[] args) {
 
         DescargaParalelaThreadPool programa = null;
+
+        // Procesamiento de argumentos y ejecución de las descargas según el número de argumentos.
 
         if (args.length == 2){
 
@@ -103,6 +128,11 @@ public class DescargaParalelaThreadPool {
         }
     }
 
+    /**
+     * Procesa las descargas utilizando un pool de hilos con un número fijo de hilos.
+     *
+     * @throws IOException Si ocurre un error de entrada/salida.
+     */
     private void procesarDescargas() throws IOException{
 
         ExecutorService executorService = Executors.newFixedThreadPool(getHilosSimultaneos());
@@ -117,6 +147,11 @@ public class DescargaParalelaThreadPool {
         }
     }
 
+    /**
+     * Procesa las descargas sin un límite específico de hilos, iniciando un nuevo hilo por cada URL.
+     *
+     * @throws IOException Si ocurre un error de entrada/salida.
+     */
     private void procesarDescargasSinLimite() throws IOException{
         try (BufferedReader br = Files.newBufferedReader(getArchivo())){
             String line = null;
